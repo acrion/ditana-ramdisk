@@ -1,0 +1,21 @@
+post_install() {
+    systemctl daemon-reload
+    systemctl --global enable ditana-ramdisk.service
+}
+
+post_upgrade() {
+    systemctl daemon-reload
+}
+
+pre_remove() {
+    systemctl --global disable ditana-ramdisk.service
+
+    local THUNARS_BOOKMARKS="$HOME/.config/gtk-3.0/bookmarks"
+    if [[ -f "$THUNARS_BOOKMARKS" ]]; then
+        sed -i '/RAM Disk/d' "$THUNARS_BOOKMARKS"
+    fi
+}
+
+post_remove() {
+    systemctl daemon-reload
+}
